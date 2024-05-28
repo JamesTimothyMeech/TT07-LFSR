@@ -16,21 +16,21 @@ module tt_um_lfsr (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-wire rst = ! rst_n;
-assign uio_oe = 8'b00000000;
-assign uio_out = 8'b00000000;
+    wire rst = ! rst_n;
+    assign uio_oe = 8'b00000000;
+    assign uio_out = 8'b00000000;
 
-module wb_lfsr(
-  .i_clk(clk), 
-  .i_reset(rst), 
-  .i_wb_cyc(uio_in[0]), 
-  .i_wb_stb(uio_in[1]), 
-  .i_wb_we(uio_in[2]), 
-  .i_wb_addr(uio_in[3]), 
-  .i_wb_data(ui_in), 
-  .o_wb_stall(uo_out[0]),
-  .o_wb_data(uo_out[1]),
-  .o_wb_ack(uo_out[2])
+    wb_lfsr wb_lfsr(
+      .i_clk(clk), 
+      .i_reset(rst), 
+      .i_wb_cyc(uio_in[0]), 
+      .i_wb_stb(uio_in[1]), 
+      .i_wb_we(uio_in[2]), 
+      .i_wb_addr(uio_in[3]), 
+      .i_wb_data(ui_in), 
+      .o_wb_stall(uo_out[0]),
+      .o_wb_data(uo_out[1]),
+      .o_wb_ack(uo_out[2])
 );
 
 endmodule
