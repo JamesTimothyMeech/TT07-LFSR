@@ -26,7 +26,7 @@ module tt_um_lfsr (
       .i_wb_cyc(uio_in[0]), 
       .i_wb_stb(uio_in[1]), 
       .i_wb_we(uio_in[2]), 
-      .i_wb_addr(uio_in[3]), 
+      .i_wb_addr(uio_in[5:3]), 
       .i_wb_data(ui_in), 
       .o_wb_stall(uo_out[0]),
       .o_wb_data(uo_out[1]),
