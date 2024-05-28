@@ -19,6 +19,7 @@ module tt_um_lfsr (
     wire rst = ! rst_n;
     assign uio_oe = 8'b00000000;
     assign uio_out = 8'b00000000;
+    assign uo_out[7:3] = 5'b00000;
 
     wb_lfsr wb_lfsr(
       .i_clk(clk), 
