@@ -1,5 +1,5 @@
 module linear_feedback_shift_register(out, clock, reset, seed, load_seed);
-	output out;
+	output reg out;
 	input [31:0] seed;
 	input load_seed;
 	input reset;
@@ -19,8 +19,7 @@ module flip_flop(out, clock, reset, in);
 	input clock;
 	input reset;
 	input in;
-	output out;
-	reg out;
+	output reg out;
 	always @(posedge clock or posedge reset)
 	begin
 
@@ -32,8 +31,7 @@ module flip_flop(out, clock, reset, in);
 endmodule
 
 module one_bit_mux(out, control, input_a, input_b);
-	output out;
-	reg out;
+	output reg out;
 	input control, input_a, input_b;
 	wire not_control;
 	always @(control or not_control or input_a or input_b)

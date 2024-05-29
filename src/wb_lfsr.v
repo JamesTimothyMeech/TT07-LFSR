@@ -7,7 +7,7 @@ module wb_lfsr(i_clk, i_reset, i_wb_cyc, i_wb_stb, i_wb_we, i_wb_addr, i_wb_data
 	input [2:0] i_wb_addr;
 	input[7:0] i_wb_data;
 
-	output o_wb_stall;
+	output reg o_wb_stall;
 	output reg o_wb_ack;
 	output reg o_wb_data;
 
