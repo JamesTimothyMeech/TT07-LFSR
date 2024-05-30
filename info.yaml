@@ -1,7 +1,7 @@
 # Tiny Tapeout project information
 project:
   title:        "LFSR"      # Project title
-  author:       "James Meech"      # Your name
+  author:       "James Meech and Werner Florian"      # Your name
   discord:      "Meechy"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
   description:  "Linear feedback shift register random number generator"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
