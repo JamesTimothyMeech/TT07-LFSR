@@ -23,7 +23,7 @@ A bus write happens on a rising edge of `clk` while `cyc`, `stb` and `we` (uio[0
 | 4 | 0 | run |
 | 5 to 7 | anything | clear the seed to 0 |
 
-A read cycle (`cyc` = 1, `stb` = 1, `we` = 0) puts a new LFSR bit on uo[1] on every clock edge. uo[2] (ack) goes high one clock after `stb`, and uo[0] (stall) is always 0.
+A read cycle (`cyc` = 1, `stb` = 1, `we` = 0) puts a new LFSR bit on uo[1] on every rising edge of `clk`. uo[2] (ack) goes high one clock after `stb`, and uo[0] (stall) is always 0.
 
 ## How to test
 
