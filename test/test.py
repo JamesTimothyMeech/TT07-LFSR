@@ -250,3 +250,56 @@ async def test_project(dut):
     assert dut.uo_out[1].value == 1
     
     await ClockCycles(dut.clk, 1) 
+
+
+# ---------------------------------------------------------------------------
+# A short, self-checking test of the LFSR sequence.
+#
+# The LFSR's feedback is ff[31] ^ ff[6] ^ ff[5] ^ ff[1], so in the output stream
+# every bit equals the XOR of the bits 2, 6, 7 and 32 places before it.
+# The test loads a seed, reads 300 bits, and checks that rule for every bit.
+
+async def bus_write(dut, addr, data):
+    """One Wishbone write: cyc = stb = we = 1 for one clock edge, then idle."""
+    dut.ui_in.value = data
+    dut.uio_in.value = 0b111 | (addr << 3)
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0
+    await ClockCycles(dut.clk, 1)
+
+
+async def read_bits(dut, seed, count):
+    """Load a seed, run the LFSR, and read `count` bits from uo_out[1]."""
+    await bus_write(dut, 4, 1)                      # hold the LFSR in reset
+    for i in range(4):
+        await bus_write(dut, i, (seed >> (8 * i)) & 0xFF)
+    await bus_write(dut, 4, 2)                      # load the seed
+    await bus_write(dut, 4, 0)                      # run
+    dut.uio_in.value = 0b011                        # read cycle: cyc = stb = 1, we = 0
+    await ClockCycles(dut.clk, 2)
+    bits = []
+    for _ in range(count):
+        await ClockCycles(dut.clk, 1)
+        bits.append((int(dut.uo_out.value) >> 1) & 1)   # uo_out[1]
+    return bits
+
+
+@cocotb.test()
+async def test_lfsr_sequence(dut):
+    cocotb.start_soon(Clock(dut.clk, 10, units="us").start())
+    dut.ena.value = 1
+    dut.ui_in.value = 0
+    dut.uio_in.value = 0
+    dut.rst_n.value = 0
+    await ClockCycles(dut.clk, 5)
+    dut.rst_n.value = 1
+
+    bits = await read_bits(dut, 0x87654321, 300)
+    for n in range(32, len(bits)):
+        expected = bits[n - 2] ^ bits[n - 6] ^ bits[n - 7] ^ bits[n - 32]
+        assert bits[n] == expected, f"bit {n} breaks the LFSR rule"
+    assert 100 < sum(bits) < 200, "the output should be about half ones"
+
+    # A seed of 0 is the one state an LFSR can never leave: it outputs only zeros.
+    bits = await read_bits(dut, 0, 50)
+    assert sum(bits) == 0, "seed 0 should give only zeros"
